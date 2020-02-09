@@ -5,8 +5,6 @@
 
 using namespace std;
 
-void partA(long int& e, long int& n);
-
 void encrypt(string fileName, long int e, long int n);
 void decrypt(string fileName, long int e, long int n);
 
@@ -27,11 +25,11 @@ int main(int argc, char *argv[]){
   string fileName = argv[4];
 
 
-  cout << "Arguments Received -- \n";
-  cout << "E: " << e << endl;
-  cout << "N: " << n << endl;
-  cout << "Encrypt/Decrypt: " << argv[3] << endl;
-  cout << "File Name: " << fileName << endl;
+  cout << "\n--ARGUMENTS--\n\n";
+  cout << "     E: " << e << endl;
+  cout << "     N: " << n << endl;
+  cout << "     Encrypt/Decrypt: " << argv[3] << endl;
+  cout << "     File Name: " << fileName << endl;
 
   bool encryptFlag = false;
   bool decryptFlag = false;
@@ -49,7 +47,26 @@ int main(int argc, char *argv[]){
     //Error
   }
 
-  cout << "Welcome to the RSA encryption & decryption system." << endl << endl;
+  cout << "\n--Welcome to the RSA encryption & decryption system--\n" << endl;
+
+  //Switch e and n if e is greater than n
+  /*if(e > n){
+
+    int temp = e;
+    e = n;
+    n = e;
+  }*/
+  
+  if((gcd(e,phi(n)) == 1)){
+
+    cout << "     Valid E & N values. Continuing...\n\n";
+    
+  }
+  else{
+
+    cout << "     Invalid E & N values. Exiting...\n\n";
+    exit(1);
+  }
 
   if(encryptFlag == true){
 
@@ -67,26 +84,8 @@ int main(int argc, char *argv[]){
   return 0;
 }
 
-void partA(long int& e, long int& n){
-  bool cont = true;
-  while(cont){
-    cont = false;
-    cout << "Enter a two integer PUBLIC key (e,n):" << endl;
-    cin >> e >> n;
-    cout << endl;
-    if((gcd(e,phi(n)) != 1) && (e < n)){
-      cout << "Uh oh, it looks like your public key is invalid." << endl;
-      cont = true;
-    }
-    else{
-      cout << "Thank you!" << endl;
-    }
-    cout << endl;
-  }
-}
-
 void encrypt(string InputFile, long int e, long int n){
-  cout << "-- ENCRYPTION --" << endl;
+  cout << "-- ENCRYPTING --" << endl;
 
   ifstream ifs;
   ifs.open(InputFile);
@@ -122,7 +121,7 @@ void encrypt(string InputFile, long int e, long int n){
 
 void decrypt(string InputFile, long int e, long int n){
 
-  cout << "-- DECRYPTION --" << endl;
+  cout << "--DECRYPTING--\n" << endl;
 
   ifstream ifs;
   ifs.open(InputFile);
@@ -134,19 +133,19 @@ void decrypt(string InputFile, long int e, long int n){
   ofstream ofs;
   ofs.open("decrypted.txt");
 
-  cout << "BREAKING RSA..." << endl;
-  cout << "Find d..." << endl;
+  cout << "     BREAKING RSA..." << endl;
+  cout << "     Find d...\n" << endl;
 
   long int d;
   int p=0;
   int q=0;
   d = CalcD(e, n, p ,q);
-  cout << "p: " << p << endl << "q: " << q << endl;
+  cout << "     p: " << p << endl << "     q: " << q << endl;
 
   int num;
   int C;
 
-  cout << "Decrypting now..." << endl;
+  cout << "\n     Decrypting now..." << endl;
 
   while(ifs >> num){
     C = num;
@@ -169,17 +168,20 @@ long int CalcD(long int e, long int n, int& p, int& q){
     if(isPrime(i)){
 
       double temp = double(n)/double(i);
-      if(fmod(temp,1) == 0){
+
+      if(fmod(temp, 1) == 0){
+
         if(isPrime(int(temp))){
+
           p = int(i);
           q = int(n/i);
           done = true;
         }
 
       }
-
     }
   }
+  
   long int phiN = (p-1)*(q-1);
   long int a = 1;
   long int b = 1;
