@@ -10,7 +10,7 @@ void partA(long int& e, long int& n);
 void encrypt(string fileName, long int e, long int n);
 void decrypt(string fileName, long int e, long int n);
 
-long int CalcD(long int e, long int , int&,int&);
+long int CalcD(long int e, long int n, int& p,int& q);
 bool isPrime(long int);
 long int randPrime();
 int gcd(int,int);
@@ -74,7 +74,7 @@ void partA(long int& e, long int& n){
     cout << "Enter a two integer PUBLIC key (e,n):" << endl;
     cin >> e >> n;
     cout << endl;
-    if(gcd(e,phi(n)) != 1){
+    if((gcd(e,phi(n)) != 1) && (e < n)){
       cout << "Uh oh, it looks like your public key is invalid." << endl;
       cont = true;
     }
@@ -138,8 +138,8 @@ void decrypt(string InputFile, long int e, long int n){
   cout << "Find d..." << endl;
 
   long int d;
-  int p;
-  int q;
+  int p=0;
+  int q=0;
   d = CalcD(e, n, p ,q);
   cout << "p: " << p << endl << "q: " << q << endl;
 
@@ -165,19 +165,15 @@ void decrypt(string InputFile, long int e, long int n){
 long int CalcD(long int e, long int n, int& p, int& q){
   // Find p and q
   bool done = false;
-  for(long int i = 2; i*i <= n && !done; ++i){
+  for(long int i = 2; (i <= n) && (!done); ++i){
     if(isPrime(i)){
-      cout << "n: " << n << endl;
-      cout << "i: " << i << endl;
-      cout << "n/i: " << n/i << endl;
 
       double temp = double(n)/double(i);
-      cout << temp << endl;
       if(fmod(temp,1) == 0){
-        if(isPrime(temp)){
-          p = i;
-          q = n/i;
-          done = false;
+        if(isPrime(int(temp))){
+          p = int(i);
+          q = int(n/i);
+          done = true;
         }
 
       }
@@ -255,4 +251,3 @@ char decodingSchema(int x){
 
   return myChar;
 }
-
