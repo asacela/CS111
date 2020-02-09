@@ -1,7 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<math.h>
-#include <string>
+#include<string>
 
 using namespace std;
 
@@ -9,10 +9,8 @@ void partA(long int& e, long int& n);
 
 void encrypt(string fileName, long int e, long int n);
 void decrypt(string fileName, long int e, long int n);
-
 long int CalcD(long int e, long int n, int& p,int& q);
 bool isPrime(long int);
-long int randPrime();
 int gcd(int,int);
 int phi(int);
 
@@ -31,58 +29,29 @@ int main(int argc, char *argv[]){
   cout << "E: " << e << endl;
   cout << "N: " << n << endl;
   cout << "Encrypt/Decrypt: " << argv[3] << endl;
-  cout << "File Name: " << fileName << endl;
+  cout << "File Name: " << fileName << endl << endl;
 
-  bool encryptFlag = false;
-  bool decryptFlag = false;
+  if((e >= n) || (gcd(e,phi(n)) != 1)){
+    cout << "Uh oh, it looks like your public key is invalid." << endl;
+    exit(1);
+  }
+
 
   if(strcmp(argv[3], "e") == 0){
+    encrypt(fileName, e, n);
 
-    encryptFlag = true;
   }
   else if(strcmp(argv[3], "d") == 0){
-
-    decryptFlag = true;
-  }
-  else{
-
-    //Error
-  }
-
-  cout << "Welcome to the RSA encryption & decryption system." << endl << endl;
-
-  if(encryptFlag == true){
-
-    encrypt(fileName, e, n);
-  }
-  else if(decryptFlag == true){
-
     decrypt(fileName, e, n);
+
   }
   else{
-
+    cout << "Invalid option." << endl;
     //Error
   }
+
 
   return 0;
-}
-
-void partA(long int& e, long int& n){
-  bool cont = true;
-  while(cont){
-    cont = false;
-    cout << "Enter a two integer PUBLIC key (e,n):" << endl;
-    cin >> e >> n;
-    cout << endl;
-    if((gcd(e,phi(n)) != 1) && (e < n)){
-      cout << "Uh oh, it looks like your public key is invalid." << endl;
-      cont = true;
-    }
-    else{
-      cout << "Thank you!" << endl;
-    }
-    cout << endl;
-  }
 }
 
 void encrypt(string InputFile, long int e, long int n){
@@ -101,13 +70,13 @@ void encrypt(string InputFile, long int e, long int n){
   int encoded;
   char letter;
 
-  cout << "Writing to Output File...\n";
-  while(ifs >> letter){
+  cout << "Writing to Output File (incrypted.txt)...\n";
+  while(ifs >> std::noskipws >> letter){
 
     encoded = encodingSchema(letter);
     int result = encoded;
 
-    for(int i = 0; i < e-1 ; i++){
+    for(int i = 0; i < e-1; i++){
 
       result = (encoded * result) % n;
 
@@ -119,6 +88,7 @@ void encrypt(string InputFile, long int e, long int n){
   ifs.close();
   ofs.close();
 }
+
 
 void decrypt(string InputFile, long int e, long int n){
 
@@ -135,21 +105,19 @@ void decrypt(string InputFile, long int e, long int n){
   ofs.open("decrypted.txt");
 
   cout << "BREAKING RSA..." << endl;
-  cout << "Find d..." << endl;
 
   long int d;
   int p=0;
   int q=0;
   d = CalcD(e, n, p ,q);
+  cout << "Secret key (d,e): ("  << d << "," << e << ")" << endl;
   cout << "p: " << p << endl << "q: " << q << endl;
 
   int num;
-  int C;
-
-  cout << "Decrypting now..." << endl;
+  cout << "Decrypting to Output File (decrypted.txt)...\n";
 
   while(ifs >> num){
-    C = num;
+    int C = num;
     for(int i = 1; i < d; ++i){
 
       C = (C * num) % n;
@@ -167,13 +135,18 @@ long int CalcD(long int e, long int n, int& p, int& q){
   bool done = false;
   for(long int i = 2; (i <= n) && (!done); ++i){
     if(isPrime(i)){
+      double ntemp= n;
+      double itemp = i;
+      double temp = ntemp/itemp;
 
-      double temp = double(n)/double(i);
       if(fmod(temp,1) == 0){
+
         if(isPrime(int(temp))){
+
           p = int(i);
           q = int(n/i);
           done = true;
+
         }
 
       }
@@ -184,7 +157,7 @@ long int CalcD(long int e, long int n, int& p, int& q){
   long int a = 1;
   long int b = 1;
 
-  while(a*e == b*phiN + 1){
+  while(a*e != b*phiN + 1){
     if(a*e > b*phiN + 1){
       ++b;
     }
@@ -203,14 +176,6 @@ bool isPrime(long int n){
     }
   }
   return true;
-}
-
-long int randPrime(){
-  long int n = rand();
-  while(!isPrime(n)){
-    n = rand();
-  }
-  return n;
 }
 
 int gcd(int a,int b){
@@ -240,14 +205,14 @@ int phi(int n){
 
 long int encodingSchema(char x){
 
-  long int myInt = int(x) - 63;
+  long int myInt = int(x+36);
 
   return myInt;
 }
 
 char decodingSchema(int x){
 
-  char myChar = char(x + 63);
+  char myChar = char(x-36);
 
   return myChar;
 }
