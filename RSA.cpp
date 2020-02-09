@@ -24,6 +24,13 @@ int main(int argc, char *argv[]){
 
   string fileName = argv[4];
 
+  //Switch e and n if e is greater than n
+  if(e > n){
+
+    int temp = e;
+    e = n;
+    n = temp;
+  }
 
   cout << "\n--ARGUMENTS--\n\n";
   cout << "     E: " << e << endl;
@@ -49,13 +56,6 @@ int main(int argc, char *argv[]){
 
   cout << "\n--Welcome to the RSA encryption & decryption system--\n" << endl;
 
-  //Switch e and n if e is greater than n
-  /*if(e > n){
-
-    int temp = e;
-    e = n;
-    n = e;
-  }*/
   
   if((gcd(e,phi(n)) == 1)){
 
