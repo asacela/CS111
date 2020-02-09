@@ -8,7 +8,7 @@ using namespace std;
 void partA(long int& e, long int& n);
 
 void encrypt(string fileName, long int e, long int n);
-void decrypt(long int e, long int n);
+void decrypt(string fileName, long int e, long int n);
 
 long int CalcD(long int e, long int n);
 bool isPrime(long int);
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
   }
   else if(decryptFlag == true){
 
-    //decrypt(e,n);
+    decrypt(fileName, e, n);
   }
   else{
 
@@ -120,32 +120,41 @@ void encrypt(string InputFile, long int e, long int n){
   ofs.close();
 }
 
-void decrypt(long int e, long int n){
+void decrypt(string InputFile, long int e, long int n){
+
   cout << "-- DECRYPTION --" << endl;
-  cout << "Enter your file name." << endl;
+
   ifstream ifs;
-  string InputFile;
-  cin >> InputFile;
   ifs.open(InputFile);
   if(!ifs.is_open()){
     cout << "ERROR opening " << InputFile << endl;
     exit(1);
   }
 
-  cout << "Breaking RSA..." << endl;
-  cout << "Find d..." << endl;
-  long int d = CalcD(e,n);
-  cout << d;
-  ofstream ofs;;
+  ofstream ofs;
   ofs.open("decrypted.txt");
+
+  cout << "BREAKING RSA..." << endl;
+  cout << "Find d..." << endl;
+
+  long int d;
+  d = CalcD(e, n);
+  cout << d;
 
 
   int num;
+  int C;
+
+  cout << "Decrypting now..." << endl;
+
   while(ifs >> num){
-
-
+    C = num;
+    for(int i = 1; i < d; ++i){
+      
+      C = (C * num) % n;
+    }
+    ofs << decodingSchema(C);
   }
-
 
   ifs.close();
   ofs.close();
