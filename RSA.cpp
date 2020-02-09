@@ -10,7 +10,7 @@ void partA(long int& e, long int& n);
 void encrypt(string fileName, long int e, long int n);
 void decrypt(string fileName, long int e, long int n);
 
-long int CalcD(long int e, long int n);
+long int CalcD(long int e, long int , int&,int&);
 bool isPrime(long int);
 long int randPrime();
 int gcd(int,int);
@@ -112,8 +112,8 @@ void encrypt(string InputFile, long int e, long int n){
       result = (encoded * result) % n;
 
     }
-    
-    ofs << result << " "; 
+
+    ofs << result << " ";
   }
 
   ifs.close();
@@ -138,9 +138,10 @@ void decrypt(string InputFile, long int e, long int n){
   cout << "Find d..." << endl;
 
   long int d;
-  d = CalcD(e, n);
-  cout << d;
-
+  int p;
+  int q;
+  d = CalcD(e, n, p ,q);
+  cout << "p: " << p << endl << "q: " << q << endl;
 
   int num;
   int C;
@@ -150,7 +151,7 @@ void decrypt(string InputFile, long int e, long int n){
   while(ifs >> num){
     C = num;
     for(int i = 1; i < d; ++i){
-      
+
       C = (C * num) % n;
     }
     ofs << decodingSchema(C);
@@ -161,20 +162,32 @@ void decrypt(string InputFile, long int e, long int n){
 }
 
 // Helper functions
-long int CalcD(long int e, long int n){
+long int CalcD(long int e, long int n, int& p, int& q){
   // Find p and q
-  int p,q;
-  for(long int i = 2; i*i <= n; ++i){
+  bool done = false;
+  for(long int i = 2; i*i <= n && !done; ++i){
     if(isPrime(i)){
-      if(isPrime(n/i)){
-        p = i;
-        q = n/i;
-        break;
+      cout << "n: " << n << endl;
+      cout << "i: " << i << endl;
+      cout << "n/i: " << n/i << endl;
+
+      double temp = double(n)/double(i);
+      cout << temp << endl;
+      if(fmod(temp,1) == 0){
+        if(isPrime(temp)){
+          p = i;
+          q = n/i;
+          done = false;
+        }
+
       }
+
     }
   }
   long int phiN = (p-1)*(q-1);
-  long int a,b = 1;
+  long int a = 1;
+  long int b = 1;
+
   while(a*e == b*phiN + 1){
     if(a*e > b*phiN + 1){
       ++b;
