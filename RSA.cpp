@@ -1,16 +1,24 @@
+/*
+
+Justin Gomez      SID: 862035390
+
+Alec Asatoorian   SID: 862026505
+
+*/
 #include<iostream>
 #include<fstream>
 #include<math.h>
-#include <string>
+#include<string>
+#include<stdio.h>
+#include<string.h>
+#include<cstring>
 
 using namespace std;
 
 void encrypt(string fileName, long int e, long int n);
 void decrypt(string fileName, long int e, long int n);
-
 long int CalcD(long int e, long int n, int& p,int& q);
 bool isPrime(long int);
-long int randPrime();
 int gcd(int,int);
 int phi(int);
 
@@ -32,28 +40,40 @@ int main(int argc, char *argv[]){
     n = temp;
   }
 
+<<<<<<< HEAD
   cout << "\n--ARGUMENTS--\n\n";
   cout << "     E: " << e << endl;
   cout << "     N: " << n << endl;
   cout << "     Encrypt/Decrypt: " << argv[3] << endl;
   cout << "     File Name: " << fileName << endl;
+=======
+  cout << "Arguments Received -- \n";
+  cout << "E: " << e << endl;
+  cout << "N: " << n << endl;
+  cout << "Encrypt/Decrypt: " << argv[3] << endl;
+  cout << "File Name: " << fileName << endl << endl;
 
-  bool encryptFlag = false;
-  bool decryptFlag = false;
+  if((e >= n) || (gcd(e,phi(n)) != 1)){
+    cout << "Uh oh, it looks like your public key is invalid." << endl;
+    exit(1);
+  }
+>>>>>>> master
+
 
   if(strcmp(argv[3], "e") == 0){
+    encrypt(fileName, e, n);
 
-    encryptFlag = true;
   }
   else if(strcmp(argv[3], "d") == 0){
+    decrypt(fileName, e, n);
 
-    decryptFlag = true;
   }
   else{
-
+    cout << "Invalid option." << endl;
     //Error
   }
 
+<<<<<<< HEAD
   cout << "\n--Welcome to the RSA encryption & decryption system--\n" << endl;
 
   
@@ -80,6 +100,8 @@ int main(int argc, char *argv[]){
 
     //Error
   }
+=======
+>>>>>>> master
 
   return 0;
 }
@@ -100,17 +122,20 @@ void encrypt(string InputFile, long int e, long int n){
   int encoded;
   char letter;
 
-  cout << "Writing to Output File...\n";
-  while(ifs >> letter){
+  cout << "Writing to Output File (incrypted.txt)...\n";
+  ifs >> std::noskipws;
+  while(ifs  >> letter){
 
     encoded = encodingSchema(letter);
-    int result = encoded;
+    int result = 1;
+    // cout << result <<",";
 
-    for(int i = 0; i < e-1 ; i++){
+    for(int i = 0; i < e; i++){
 
       result = (encoded * result) % n;
-
+      // cout << result <<",";
     }
+    cout << letter << ": " << encoded <<" -> "<< result << endl; //---------------------------------------
 
     ofs << result << " ";
   }
@@ -119,40 +144,58 @@ void encrypt(string InputFile, long int e, long int n){
   ofs.close();
 }
 
+
 void decrypt(string InputFile, long int e, long int n){
 
+<<<<<<< HEAD
   cout << "--DECRYPTING--\n" << endl;
 
+=======
+  cout << "-- DECRYPTION --" << endl;
+>>>>>>> master
   ifstream ifs;
   ifs.open(InputFile);
   if(!ifs.is_open()){
     cout << "ERROR opening " << InputFile << endl;
     exit(1);
   }
-
   ofstream ofs;
   ofs.open("decrypted.txt");
+<<<<<<< HEAD
 
   cout << "     BREAKING RSA..." << endl;
   cout << "     Find d...\n" << endl;
+=======
+  cout << "BREAKING RSA..." << endl;
+
+>>>>>>> master
 
   long int d;
   int p=0;
   int q=0;
   d = CalcD(e, n, p ,q);
+<<<<<<< HEAD
   cout << "     p: " << p << endl << "     q: " << q << endl;
+=======
+  cout << "Secret key (d,e): ("  << d << "," << e << ")" << endl;
+  cout << "p: " << p << endl << "q: " << q << endl;
+>>>>>>> master
 
-  int num;
-  int C;
 
+<<<<<<< HEAD
   cout << "\n     Decrypting now..." << endl;
+=======
+  int num;
+  cout << "Decrypting to Output File (decrypted.txt)...\n";
+>>>>>>> master
 
   while(ifs >> num){
-    C = num;
-    for(int i = 1; i < d; ++i){
+    int C = 1;
+    for(int i = 0; i < d; ++i){
 
       C = (C * num) % n;
     }
+    cout << num <<" -> "<< C << ": " << char(C) <<endl;   //-----------------------------
     ofs << decodingSchema(C);
   }
 
@@ -166,16 +209,24 @@ long int CalcD(long int e, long int n, int& p, int& q){
   bool done = false;
   for(long int i = 2; (i <= n) && (!done); ++i){
     if(isPrime(i)){
+      double ntemp= n;
+      double itemp = i;
+      double temp = ntemp/itemp;
 
+<<<<<<< HEAD
       double temp = double(n)/double(i);
 
       if(fmod(temp, 1) == 0){
+=======
+      if(fmod(temp,1) == 0){
+>>>>>>> master
 
         if(isPrime(int(temp))){
 
           p = int(i);
           q = int(n/i);
           done = true;
+
         }
 
       }
@@ -186,7 +237,7 @@ long int CalcD(long int e, long int n, int& p, int& q){
   long int a = 1;
   long int b = 1;
 
-  while(a*e == b*phiN + 1){
+  while(a*e != b*phiN + 1){
     if(a*e > b*phiN + 1){
       ++b;
     }
@@ -205,14 +256,6 @@ bool isPrime(long int n){
     }
   }
   return true;
-}
-
-long int randPrime(){
-  long int n = rand();
-  while(!isPrime(n)){
-    n = rand();
-  }
-  return n;
 }
 
 int gcd(int a,int b){
@@ -242,14 +285,14 @@ int phi(int n){
 
 long int encodingSchema(char x){
 
-  long int myInt = int(x) - 63;
+  long int myInt = int(x);
 
   return myInt;
 }
 
 char decodingSchema(int x){
 
-  char myChar = char(x + 63);
+  char myChar = char(x);
 
   return myChar;
 }
