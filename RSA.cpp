@@ -1,7 +1,17 @@
+/*
+
+Justin Gomez      SID: 862035390
+
+Alec Asatoorian   SID: 862026505
+
+*/
 #include<iostream>
 #include<fstream>
 #include<math.h>
 #include<string>
+#include<stdio.h>
+#include<string.h>
+#include<cstring>
 
 using namespace std;
 
@@ -71,16 +81,19 @@ void encrypt(string InputFile, long int e, long int n){
   char letter;
 
   cout << "Writing to Output File (incrypted.txt)...\n";
-  while(ifs >> std::noskipws >> letter){
+  ifs >> std::noskipws;
+  while(ifs  >> letter){
 
     encoded = encodingSchema(letter);
-    int result = encoded;
+    int result = 1;
+    // cout << result <<",";
 
-    for(int i = 0; i < e-1; i++){
+    for(int i = 0; i < e; i++){
 
       result = (encoded * result) % n;
-
+      // cout << result <<",";
     }
+    cout << letter << ": " << encoded <<" -> "<< result << endl; //---------------------------------------
 
     ofs << result << " ";
   }
@@ -93,18 +106,16 @@ void encrypt(string InputFile, long int e, long int n){
 void decrypt(string InputFile, long int e, long int n){
 
   cout << "-- DECRYPTION --" << endl;
-
   ifstream ifs;
   ifs.open(InputFile);
   if(!ifs.is_open()){
     cout << "ERROR opening " << InputFile << endl;
     exit(1);
   }
-
   ofstream ofs;
   ofs.open("decrypted.txt");
-
   cout << "BREAKING RSA..." << endl;
+
 
   long int d;
   int p=0;
@@ -113,15 +124,17 @@ void decrypt(string InputFile, long int e, long int n){
   cout << "Secret key (d,e): ("  << d << "," << e << ")" << endl;
   cout << "p: " << p << endl << "q: " << q << endl;
 
+
   int num;
   cout << "Decrypting to Output File (decrypted.txt)...\n";
 
   while(ifs >> num){
-    int C = num;
-    for(int i = 1; i < d; ++i){
+    int C = 1;
+    for(int i = 0; i < d; ++i){
 
       C = (C * num) % n;
     }
+    cout << num <<" -> "<< C << ": " << char(C) <<endl;   //-----------------------------
     ofs << decodingSchema(C);
   }
 
@@ -205,14 +218,14 @@ int phi(int n){
 
 long int encodingSchema(char x){
 
-  long int myInt = int(x+36);
+  long int myInt = int(x);
 
   return myInt;
 }
 
 char decodingSchema(int x){
 
-  char myChar = char(x-36);
+  char myChar = char(x);
 
   return myChar;
 }
