@@ -40,13 +40,7 @@ int main(int argc, char *argv[]){
     n = temp;
   }
 
-<<<<<<< HEAD
-  cout << "\n--ARGUMENTS--\n\n";
-  cout << "     E: " << e << endl;
-  cout << "     N: " << n << endl;
-  cout << "     Encrypt/Decrypt: " << argv[3] << endl;
-  cout << "     File Name: " << fileName << endl;
-=======
+
   cout << "Arguments Received -- \n";
   cout << "E: " << e << endl;
   cout << "N: " << n << endl;
@@ -57,7 +51,7 @@ int main(int argc, char *argv[]){
     cout << "Uh oh, it looks like your public key is invalid." << endl;
     exit(1);
   }
->>>>>>> master
+
 
 
   if(strcmp(argv[3], "e") == 0){
@@ -72,36 +66,6 @@ int main(int argc, char *argv[]){
     cout << "Invalid option." << endl;
     //Error
   }
-
-<<<<<<< HEAD
-  cout << "\n--Welcome to the RSA encryption & decryption system--\n" << endl;
-
-  
-  if((gcd(e,phi(n)) == 1)){
-
-    cout << "     Valid E & N values. Continuing...\n\n";
-    
-  }
-  else{
-
-    cout << "     Invalid E & N values. Exiting...\n\n";
-    exit(1);
-  }
-
-  if(encryptFlag == true){
-
-    encrypt(fileName, e, n);
-  }
-  else if(decryptFlag == true){
-
-    decrypt(fileName, e, n);
-  }
-  else{
-
-    //Error
-  }
-=======
->>>>>>> master
 
   return 0;
 }
@@ -147,12 +111,9 @@ void encrypt(string InputFile, long int e, long int n){
 
 void decrypt(string InputFile, long int e, long int n){
 
-<<<<<<< HEAD
-  cout << "--DECRYPTING--\n" << endl;
 
-=======
   cout << "-- DECRYPTION --" << endl;
->>>>>>> master
+
   ifstream ifs;
   ifs.open(InputFile);
   if(!ifs.is_open()){
@@ -161,33 +122,24 @@ void decrypt(string InputFile, long int e, long int n){
   }
   ofstream ofs;
   ofs.open("decrypted.txt");
-<<<<<<< HEAD
 
-  cout << "     BREAKING RSA..." << endl;
-  cout << "     Find d...\n" << endl;
-=======
   cout << "BREAKING RSA..." << endl;
 
->>>>>>> master
+
 
   long int d;
   int p=0;
   int q=0;
   d = CalcD(e, n, p ,q);
-<<<<<<< HEAD
-  cout << "     p: " << p << endl << "     q: " << q << endl;
-=======
+
   cout << "Secret key (d,e): ("  << d << "," << e << ")" << endl;
   cout << "p: " << p << endl << "q: " << q << endl;
->>>>>>> master
 
 
-<<<<<<< HEAD
-  cout << "\n     Decrypting now..." << endl;
-=======
+
   int num;
   cout << "Decrypting to Output File (decrypted.txt)...\n";
->>>>>>> master
+
 
   while(ifs >> num){
     int C = 1;
@@ -213,13 +165,7 @@ long int CalcD(long int e, long int n, int& p, int& q){
       double itemp = i;
       double temp = ntemp/itemp;
 
-<<<<<<< HEAD
-      double temp = double(n)/double(i);
-
-      if(fmod(temp, 1) == 0){
-=======
       if(fmod(temp,1) == 0){
->>>>>>> master
 
         if(isPrime(int(temp))){
 
